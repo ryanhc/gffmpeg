@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>gffmpeg</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+    <script>if (window.module) module = window.module;</script>
+</head>
+<body>
+    <h1>ffmpeg</h1>
+    <h2>Select a directory</h2>
+    <div class="grid-container">
+        <div class="grid-item">input file:</div><div class="grid-item"><input id="inputFile" type="file"  accept="video/*,.mov"/></div><div></div>
+        <div class="grid-item">output dir:</div><div class="grid-item"><input id="outputDir" type="file" webkitdirectory/></div><div></div>
+        <div class="grid-item">output container:</div><div class="grid-item"><input id="outputContainer" value="mp4"/></div><div></div>
+      </div>
+
+    <h2>options</h2>
+    <div class="grid-container">
+      <div class="grid-item">-c:v:</div><div class="grid-item"><input id="vcodec" value="libx264"></input></div><div></div>
+      <div class="grid-item">-crf</div><div class="grid-item"><select id="crf"></select></div><div>(0: lossless, 51: worst quality possible, 23: default)</div>
+      <div class="grid-item">-c:a:</div><div class="grid-item"><input value="copy"></input></div><div></div>
+      <div class="grid-item">-preset</div><div class="grid-item"><select id="preset"></select></div><div></div>
+    </div>
+
+    <h3>ffmepg command</h3>
+    <input id="cmd"></input>
+    <!--
+    ffmpeg -i input.mov -c:v libx264 -crf 23 -c:a copy -preset slow -map_metadata 0 out/out.mp4 -y
+    -->
+    <div>
+        <input type="button" value="Convert" onclick="convert()"></input>
+    </div>
+
+    <h2>log</h2>
+    <textarea id="results"></textarea>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(e) {
+            init();
+        })
+    </script>
+</body>
+</html>
