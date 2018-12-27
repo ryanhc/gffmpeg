@@ -1,11 +1,17 @@
-// for windows
-var DIR_SEP = "\\";
+const os = require('os');
+
+var DIR_SEP = "/";
+var FFMPEG = "ffmpeg";
+if (os.platform() == "win32") {
+    DIR_SEP = "\\";
+    FFMPEG = "c:\\ffmpeg\\bin\\ffmpeg.exe";
+}
 
 function convert() {
-    updateCommand();
     $('#results')[0].value = "";
     const exec = require('child_process').exec;
-    exec($("#cmd")[0].innerText, cb);
+    console.log("running:" + $("#cmd")[0].value);
+    exec($("#cmd")[0].value, cb);
 };
 
 function cb(error, stdout, stderr) {
@@ -14,7 +20,7 @@ function cb(error, stdout, stderr) {
 }
 
 function updateCommand() {
-    var cmdToRun = "c:\\ffmpeg\\bin\\ffmpeg.exe";
+    var cmdToRun = FFMPEG;
     var inputFile = "undefined.mp4";
     var outputFile = "undefined.mp4";
     if ($("#inputFile")[0].files.length > 0) {
@@ -30,9 +36,17 @@ function updateCommand() {
     outputDir += DIR_SEP;
 
     cmdToRun += " -i " + inputFile;
-    cmdToRun += " -c:v " + $("#vcodec")[0].value;
-    cmdToRun += " -crf " + $("#crf")[0].value;
-    cmdToRun += " -c:a copy";
+
+    cmdToRun += " -c:v " + $("#c_v")[0].value;
+    if ($("#c_v")[0].value != "copy") {
+        cmdToRun += " -crf " + $("#crf")[0].value;
+    }
+
+    cmdToRun += " -c:a " + $("#c_a")[0].value;
+    if ($("#c_a")[0].value != "copy") {
+        cmdToRun += " -b:a " + $("#b_a")[0].value;
+    }
+
     cmdToRun += " -preset " + $("#preset")[0].selectedOptions[0].value;
     cmdToRun += " -map_metadata 0";
     cmdToRun += " " + outputDir + outputFile;
@@ -50,12 +64,36 @@ function init() {
     $("#outputContainer")[0].addEventListener("change", function() {
         updateCommand();
     });
+    $("#c_v")[0].addEventListener("change", function() {
+        updateCommand();
+    });
     $("#crf")[0].addEventListener("change", function() {
+        updateCommand();
+    });
+    $("#c_a")[0].addEventListener("change", function() {
+        updateCommand();
+    });
+    $("#b_a")[0].addEventListener("change", function() {
         updateCommand();
     });
     $("#preset")[0].addEventListener("change", function() {
         updateCommand();
     });
+
+    {
+        var select = $("#c_v")[0];
+        var opts = ["libx264", "libx265", "copy"];
+        opts.forEach(function(name) {
+            var opt = document.createElement("option");
+            opt.text = name;
+            select.add(opt);
+        });
+        // x264 is the default option
+        var i = opts.findIndex(function(name) {
+            return name == "libx264";
+        });
+        select.selectedIndex = i;
+    }
 
     {
         var select = $("#crf")[0];
@@ -66,6 +104,36 @@ function init() {
         }
         // 23 is the default option
         select.selectedIndex = 23;
+    }
+
+    {
+        var select = $("#c_a")[0];
+        var opts = ["aac", "libfdk_aac", "copy"];
+        opts.forEach(function(name) {
+            var opt = document.createElement("option");
+            opt.text = name;
+            select.add(opt);
+        });
+        // copy is the default option
+        var i = opts.findIndex(function(name) {
+            return name == "copy";
+        });
+        select.selectedIndex = i;
+    }
+
+    {
+        var select = $("#b_a")[0];
+        var opts = ["128k", "192k", "384k"];
+        opts.forEach(function(name) {
+            var opt = document.createElement("option");
+            opt.text = name;
+            select.add(opt);
+        });
+        // 128k is the default option
+        var i = opts.findIndex(function(name) {
+            return name == "128k";
+        });
+        select.selectedIndex = i;
     }
 
     {

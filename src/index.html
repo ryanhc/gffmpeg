@@ -21,9 +21,10 @@
 
     <h2>options</h2>
     <div class="grid-container">
-      <div class="grid-item">-c:v:</div><div class="grid-item"><input id="vcodec" value="libx264"></input></div><div></div>
-      <div class="grid-item">-crf</div><div class="grid-item"><select id="crf"></select></div><div>(0: lossless, 51: worst quality possible, 23: default)</div>
-      <div class="grid-item">-c:a:</div><div class="grid-item"><input value="copy"></input></div><div></div>
+      <div class="grid-item">-c:v:</div><div class="grid-item"><select id="c_v"></select></div><div></div>
+      <div class="grid-item">-crf</div><div class="grid-item"><select id="crf"></select></div><div>(0: lossless, 51: worst quality possible) default: x264:23, x265:28)</div>
+      <div class="grid-item">-c:a:</div><div class="grid-item"><select id="c_a"></select></div><div></div>
+      <div class="grid-item">-b:a:</div><div class="grid-item"><select id="b_a"></select></div><div></div>
       <div class="grid-item">-preset</div><div class="grid-item"><select id="preset"></select></div><div></div>
     </div>
 
